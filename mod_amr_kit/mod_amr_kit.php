@@ -8,14 +8,14 @@
 <div id="sidebar_mail">
 	<div id="header_mail">KEEP IN TOUCH</div>
 	<div id="text_mail">Learn about deals &amp; specials by email.</div>
-	<a href="#gk_lightbox_room_test" rel="boxed" class="button_email_signup"><?php echo $params->get('anchor_text'); ?></a>
+	<a href="#gk_lightbox_room_test" rel="boxed" class="button_email_signup">SIGN UP HERE</a>
 
 	<div style="display: none;">
 		<div id="gk_lightbox_room_test">
-			<div class="form-validate form_mail">
+			<div class="form_mail">
 				<div class="header_mail">SIGN UP TO RECEIVE<br />EXCLUSIVE OFFERS AND PROMOTIONS</div>
 				<div id="formerror" class="error" style="color:red;text-align:center;width:100%;height:14px;size:12px;padding-bottom:5px;"></div>
-				<form class='mail_sign_up form-validate' onsubmit='submitOverride(); return false;'>
+				<form class='mail_sign_up' onsubmit='submitOverride(); return false;'>
 					<div class="formitem">
 						<label for="givenname">FIRST NAME:</label>
 						<input name='QID2094' type="text" id="givenname" tabindex="1" title="givenname" value="" size="22" maxlength="150" placeholder="First Name" pattern="[a-zA-Z0-9]+">
@@ -26,7 +26,7 @@
 					</div>
 					<div class="formitem">
 						<label for="input_mail">EMAIL:</label>
-						<input name='QID2096' type="text" id="input_mail" tabindex="3"  title="input_mail" value="" size="22" maxlength='150' placeholder="Email Address">
+						<input name='QID2096' type="text" id="input_mail" tabindex="3"  title="input_mail" value="" size="22" maxlength='150' placeholder="Email Address"  class="input_mail">
 					</div>
 					<div class="formitem">
 						<label for="zipcode">ZIPCODE:</label>
@@ -41,9 +41,6 @@
 							please see here: <a href="http://www.appleleisuregroup.com" target="_blank">www.appleleisuregroup.com. </a> You may withdraw this consent at any time by e-mailing us 
 							at <a href="mailto: unsubscribe@amresorts.com" target="_blank">unsubscribe@amresorts.com. </a>For more information you can view our 
 							<a href="privacy" target="_blank">Privacy Policy</a>.</p>
-					</div>
-					<div class="formitem">
-						<input type="image" name="but_img" class="content_button validate" src="images/button_sign_up.png">
 					</div>
 					<div class="formbutton">
 						<button type="submit">Submit form</button>
@@ -114,7 +111,7 @@
 				$inputs.attr("disabled", "disabled");
 
 				jQuery.ajax({
-					url: "http://www.amresorts.us/pms_wsdl/CaptureLeadSimple.php",
+					url: "http://esurvey.cendyn.com/eSurvey_Cendyn/SocialMediaAction.aspx?DisplayHeader=",
 					type: "get",
 					data: serializedData,
 					dataType: 'text',
