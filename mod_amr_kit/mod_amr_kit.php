@@ -1,7 +1,7 @@
 <?php
 	//don't allow other scripts to grab and execute our file
 	defined('_JEXEC') or die('Direct Access to this location is not allowed.');
-	JHTML::_('behavior.formvalidation');
+	JHTML::script('modernizr_forms.js', 'modules/mod_amr_mcc_email/js/');
 	//echo 'REQUEST='; foreach ($_SERVER as $i=>$ii) echo $i.'='.$ii.' ';
 ?>
 
@@ -12,40 +12,44 @@
 
 	<div style="display: none;">
 		<div id="gk_lightbox_room_test">
-			<div class="form_mail">
-				<!--form action="http://www.amresorts.us/pms_wsdl/CaptureLeadSimple.php" method="post"-->
+			<div class="form-validate form_mail">
+				<div class="header_mail">SIGN UP TO RECEIVE<br />EXCLUSIVE OFFERS AND PROMOTIONS</div>
+				<div id="formerror" class="error" style="color:red;text-align:center;width:100%;height:14px;size:12px;padding-bottom:5px;"></div>
 				<form class='mail_sign_up form-validate' onsubmit='submitOverride(); return false;'>
-					<input name="nextpage" type="hidden" value="<?php echo JURI::current();?>" />
-					<input name="lead_source" type="hidden" value="<?php echo $params->get('lead_source'); ?>" />
 					<div class="formitem">
-						<label>FIRST NAME:</label>
-						<input name='QID2094' type="text" id="givenname" tabindex="1" title="first" value="" size="22" maxlength="100" required>
+						<label for="givenname">FIRST NAME:</label>
+						<input name='QID2094' type="text" id="givenname" tabindex="1" title="givenname" value="" size="22" maxlength="150" placeholder="First Name" pattern="[a-zA-Z0-9]+">
 					</div>
 					<div class="formitem">
-						<label>LAST NAME:</label>
-						<input name='QID2095' type="text" id="familyname" tabindex="2" title="givenname" value="" size="22" maxlength='150' required>
+						<label for="familyname">LAST NAME:</label>
+						<input name='QID2095' type="text" id="familyname" tabindex="2" title="familyname" value="" size="22" maxlength='150' placeholder="Last Name"  pattern="[a-zA-Z0-9]+">
 					</div>
 					<div class="formitem">
-						<label>EMAIL:</label>
-						<input name='QID2096' type="text" id="input_mail" class="validate-email" tabindex="3"  title="email" value="" size="22" maxlength='150' required>
+						<label for="input_mail">EMAIL:</label>
+						<input name='QID2096' type="text" id="input_mail" tabindex="3"  title="input_mail" value="" size="22" maxlength='150' placeholder="Email Address">
 					</div>
 					<div class="formitem">
-						<label>ZIPCODE:</label>
-						<input name='QID21914' type="text" id="zipcode" tabindex="4"  class="validate-numeric" title="zipcode" value="" size="10" maxlength='150' required>
+						<label for="zipcode">ZIPCODE:</label>
+						<input name='QID21914' type="text" id="zipcode" tabindex="4"  title="zipcode" value="" size="10" maxlength='150' placeholder="Zip Code" pattern="[a-zA-Z0-9]+">
 					</div>
 					<div class="checkbox">
-						<input name='optin' type='checkbox' id='optin' value='1' required>
+						<input name='optin' type='checkbox' id='optin' value='1' pattern="[1]">
 					</div>
 					<div class="checkbox-text">
-						<p>I agree to receive e-mail communications regarding AMResorts’ branded resorts as well as from affiliates of AMResorts within the Apple Leisure Group companies regarding 
-							their travel and hospitality products and services, including Unlimited Vacation Club, AppleVacations, CheapCaribbean.com, Travel Impressions and Amstar. Once you have opted-in 
-							to receive Email from us, you may choose to opt-out of Email communications at any time by updating your account.  For more information you can view our Privacy Policy.</p>
+						<p>AMResorts is requesting for itself and on behalf of its affiliates within the Apple Leisure Group collection of companies your consent to receive e-mail and other electronic 
+							communications regarding the travel and hospitality products and services of the Apple Leisure Group companies.  For more on the companies and for contact information, 
+							please see here: <a href="http://www.appleleisuregroup.com" target="_blank">www.appleleisuregroup.com. </a> You may withdraw this consent at any time by e-mailing us 
+							at <a href="mailto: unsubscribe@amresorts.com" target="_blank">unsubscribe@amresorts.com. </a>For more information you can view our 
+							<a href="privacy" target="_blank">Privacy Policy</a>.</p>
 					</div>
-                   <div class="formitem">
+					<div class="formitem">
 						<input type="image" name="but_img" class="content_button validate" src="images/button_sign_up.png">
-                   </div>
+					</div>
+					<div class="formbutton">
+						<button type="submit">Submit form</button>
+					</div>
 
-                   <!--  cendyn specific hidden form fields -->
+					<!--  cendyn specific hidden form fields -->
 					<input type='hidden' value='False' name='IsMemberAgent'>
 					<input type='hidden' value='False' name='IsMemberSurveyPerence'>
 					<input type='hidden' value='0' name='MemberID'>
@@ -81,7 +85,7 @@
 				</form>
 			</div>
 			<div class="form_mess" style="display:none;">
-				<center>Thank you!</center>You are now signed up to receive our latest news &amp; features, special promotions <br/>and subscribers-only limited offers and exclusive amenities. You can unsubscribe at any time.
+				<center>Thank you!</center>You are now signed up to receive our latest news &amp; features, special promotions and subscribers-only limited offers and exclusive amenities. You can unsubscribe at any time.
 			</div>
 		</div>
 	</div>        
@@ -92,32 +96,77 @@
 			jQuery('.form_mess').hide();
 		});
 
+		var validationInfo = {
+			'emailField' : {
+				'pattern' :  '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,6}$'
+			},
+			'checkBox' : {
+				'pattern' : '[1]'
+			}
+		};
+
 		function submitOverride(){
-			var $form = jQuery('.mail_sign_up'),
-			$inputs = $form.find("input, select, button, textarea"),
-			serializedData = $form.serialize();
+			if(validateEmail() && validateTerms()){
+				var $form = jQuery('.mail_sign_up'),
+				$inputs = $form.find("input, select, button, textarea"),
+					serializedData = $form.serialize();
 
-			$inputs.attr("disabled", "disabled");
+				$inputs.attr("disabled", "disabled");
 
-			jQuery.ajax({
-				url: "http://esurvey.cendyn.com/eSurvey_Cendyn/SocialMediaAction.aspx?DisplayHeader=",
-				type: "get",
-				data: serializedData,
-				dataType: 'text',
+				jQuery.ajax({
+					url: "http://www.amresorts.us/pms_wsdl/CaptureLeadSimple.php",
+					type: "get",
+					data: serializedData,
+					dataType: 'text',
 
-				success: function(response, textStatus, jqXHR){
-					//alert('!!'+response);
-				},
-				error: function(jqXHR, textStatus, errorThrown){
-					//alert('??'+textStatus+' - '+errorThrown);
-				},
-				complete: function(){
-					$inputs.removeAttr("disabled");
-					jQuery('.form_mail').hide();
-					jQuery('.form_mess').show();
-					//jQuery('#sidebar_mail').addClass('active');
-				}
-			});
+					success: function(response, textStatus, jqXHR){
+						//alert('!!'+response);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						//alert('??'+textStatus+' - '+errorThrown);
+					},
+					complete: function(){
+						$inputs.removeAttr("disabled");
+						jQuery('.form_mail').hide();
+						jQuery('.form_mess').show();
+						//jQuery('#sidebar_mail').addClass('active');
+					}
+				});
+			}
+		}//submitOverride
+		
+		function validateTerms(){
+			var termsField = jQuery(".mail_sign_up .checkbox input");
+			var errorField = jQuery(".error")[1];
+			//console.log(termsField.is(':checked'));
+			if(termsField.is(':checked')){
+				errorField.innerHTML = " ";
+				return true;
+			}else{
+				errorField.innerHTML = "Please accept terms and conditions."
+				return false;
+			}
+		}
+		function validateEmail(){
+			var emailField = jQuery(".mail_sign_up .input_mail")[1];
+			var errorField = jQuery(".error")[1];
+
+			if(Modernizr.input.pattern){
+				var myPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+			}else{
+				var myPattern = validationInfo['emailField'].pattern;
+				console.log(myPattern);
+			}
+			
+			var isValid = emailField.value.search(myPattern) >= 0;
+			console.log(isValid);
+			if(isValid){
+				errorField.innerHTML = " ";
+				return true;
+			}else{
+				errorField.innerHTML = "Please enter a valid email address";
+				return false;
+			}
 		}
 	</script>
 </div>
